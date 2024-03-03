@@ -4,12 +4,12 @@ name: Relase Charts
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'charts/**'
   workflow_dispatch:
     branches:
-      - master
+      - main
 
 jobs:
   release:
