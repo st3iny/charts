@@ -1,0 +1,10 @@
+---
+apiVersion: v2
+version: 2.31.0
+appVersion: 0.63.3
+description: A Helm chart for trillium notes.
+name: trilium-notes
+type: application
+maintainers:
+- name: st3iny
+  url: https://github.com/st3iny

@@ -1,0 +1,45 @@
+name: Update trilium-notes chart
+
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Read old chart
+      id: old-version
+      uses: jbutcher5/read-yaml@main
+      with:
+        file: charts/trilium-notes/Chart.yaml
+        key-path: '["appVersion"]'
+
+    - name: Build
+      working-directory:
+      run: cargo install --path trilium-updater --debug --verbose
+
+    - name: Run
+      run: trilium-updater charts/trilium-notes/Chart.yaml
+
+    - name: Read new chart
+      uses: jbutcher5/read-yaml@main
+      id: new-version
+      with:
+        file: charts/trilium-notes/Chart.yaml
+        key-path: '["appVersion"]'
+
+    - name: Create PR
+      uses: peter-evans/create-pull-request@v4
+      with:
+        commit-message: "trilium-notes: bump app from ${{ steps.old-version.outputs.data }} to ${{ steps.new-version.outputs.data }}"
+        branch: trilium-notes/${{ steps.new-version.outputs.data }}
+        title: "trilium-notes: bump app from ${{ steps.old-version.outputs.data }} to ${{ steps.new-version.outputs.data }}"
+        body: ""
+        reviewers: st3iny
