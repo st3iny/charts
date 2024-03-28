@@ -65,6 +65,7 @@ async fn main_impl(args: Args) -> Result<()> {
     log::info!("Updating trilium from {} to {tag}", chart.app_version);
     chart.app_version = tag;
     chart.version.minor += 1;
+    chart.version.patch = 0;
 
     chart.save(&args.chart).context("Failed to save chart")?;
 
