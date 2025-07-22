@@ -1,7 +1,7 @@
 ---
 apiVersion: v2
-version: 3.1.1
-appVersion: 0.97.0
+version: 3.2.0
+appVersion: 0.97.1
 description: A Helm chart for trillium notes.
 name: trilium-notes
 type: application
