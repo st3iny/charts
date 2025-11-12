@@ -2,6 +2,19 @@ apiVersion: v1
 entries:
   trilium-notes:
   - apiVersion: v2
+    appVersion: 0.99.5
+    created: "2025-11-12T07:59:57.982809278Z"
+    description: A Helm chart for trillium notes.
+    digest: 890db4583276c96a39b6c70ae444de8c14851e5782e820d6228148a185a884c0
+    maintainers:
+    - name: st3iny
+      url: https://github.com/st3iny
+    name: trilium-notes
+    type: application
+    urls:
+    - https://github.com/st3iny/charts/releases/download/trilium-notes-3.11.0/trilium-notes-3.11.0.tgz
+    version: 3.11.0
+  - apiVersion: v2
     appVersion: 0.99.4
     created: "2025-11-10T08:38:38.694041511Z"
     description: A Helm chart for trillium notes.
@@ -209,4 +222,4 @@ entries:
     urls:
     - https://github.com/st3iny/charts/releases/download/trilium-notes-2.31.1/trilium-notes-2.31.1.tgz
     version: 2.31.1
-generated: "2025-11-10T08:38:38.694151015Z"
+generated: "2025-11-12T07:59:57.982932687Z"
