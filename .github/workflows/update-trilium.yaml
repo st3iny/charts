@@ -41,7 +41,7 @@ jobs:
         key-path: '["appVersion"]'
 
     - name: Create PR
-      uses: peter-evans/create-pull-request@v7
+      uses: peter-evans/create-pull-request@v8
       with:
         commit-message: "trilium-notes: bump app from ${{ steps.old-version.outputs.data }} to ${{ steps.new-version.outputs.data }}"
         branch: trilium-notes/${{ steps.new-version.outputs.data }}
