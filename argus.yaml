@@ -1,0 +1,18 @@
+log:
+  level: debug
+
+jobs:
+  - name: trilium
+    source:
+      githubReleases:
+        repo: TriliumNext/trilium
+    pipeline:
+      - excludeGithubPrereleases: {}
+      - excludeSemver:
+          unstable: true
+      - trimPrefix:
+          prefix: v
+    target:
+      helmChart:
+        file: charts/trilium-notes/Chart.yaml
+        versionBumpStrategy: minor

@@ -5,9 +5,6 @@ on:
     - cron: '0 4 * * *'
   workflow_dispatch:
 
-env:
-  CARGO_TERM_COLOR: always
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,32 +16,28 @@ jobs:
     steps:
     - uses: actions/checkout@v6
 
-    - name: Read old chart
-      id: old-version
-      uses: jbutcher5/read-yaml@main
-      with:
-        file: charts/trilium-notes/Chart.yaml
-        key-path: '["appVersion"]'
+    - name: Run argus
+      run: >-
+        docker run --rm
+        -v ./:/work
+        --env=GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+        --workdir=/work
+        ghcr.io/st3iny/argus:main
+        --job=trilium
+        --job-log=argus-job-log.json
 
-    - name: Build
-      working-directory:
-      run: cargo install --path trilium-updater --debug --verbose
-
-    - name: Run
-      run: trilium-updater charts/trilium-notes/Chart.yaml
-
-    - name: Read new chart
-      uses: jbutcher5/read-yaml@main
-      id: new-version
-      with:
-        file: charts/trilium-notes/Chart.yaml
-        key-path: '["appVersion"]'
+    - name: Extract argus log
+      id: job-log
+      run: |
+        echo "FROM=$(jq -r .trilium.from argus-job-log.json)" >> "$GITHUB_OUTPUT"
+        echo "TO=$(jq -r .trilium.to argus-job-log.json)" >> "$GITHUB_OUTPUT"
 
     - name: Create PR
       uses: peter-evans/create-pull-request@v8
       with:
-        commit-message: "trilium-notes: bump app from ${{ steps.old-version.outputs.data }} to ${{ steps.new-version.outputs.data }}"
-        branch: trilium-notes/${{ steps.new-version.outputs.data }}
-        title: "trilium-notes: bump app from ${{ steps.old-version.outputs.data }} to ${{ steps.new-version.outputs.data }}"
+        commit-message: "trilium-notes: bump app from ${{ steps.job-log.outputs.FROM }} to ${{ steps.job-log.outputs.TO }}"
+        branch: trilium-notes/${{ steps.job-log.outputs.TO }}
+        title: "trilium-notes: bump app from ${{ steps.job-log.outputs.FROM }} to ${{ steps.job-log.outputs.TO }}"
         body: ""
         reviewers: st3iny
+        add-paths: charts/trilium-notes
