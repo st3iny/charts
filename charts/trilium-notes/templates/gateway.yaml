@@ -1,0 +1,29 @@
+{{- if .Values.gateway.create -}}
+{{- $fullName := include "trilium-notes.fullname" . -}}
+{{- $svcPort := .Values.service.port -}}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateway.name | default $fullName }}
+  {{- with .Values.gateway.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  gatewayClassName: {{ .Values.gateway.className }}
+  listeners:
+    {{- with .Values.gateway.listener }}
+    - name: {{ .name }}
+      hostname: {{ .hostname }}
+      port: {{ .port }}
+      protocol: HTTPS
+      allowedRoutes:
+        namespaces:
+          from: Same
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: {{ $fullName }}-gateway-tls
+    {{- end }}
+{{- end }}

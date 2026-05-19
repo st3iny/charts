@@ -16,8 +16,7 @@ fullnameOverride: ""
 serviceAccount:
   create: true
   annotations: {}
-  # If not set and create is true, a name is generated using the fullname template
-  name:
+  name: "" # Optional, default: release full name
 
 service:
   type: ClusterIP
@@ -32,6 +31,25 @@ persistentVolume:
   annotations: {}
   size: 2Gi
 
+gateway:
+  create: false # Set to true for a standalone installation
+  name: "" # Optional, default: release full name
+  annotations:
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+  className: "" # Example: traefik
+  listener:
+    name: https
+    hostname: "" # Example: trilium.example.com
+    port: 443
+
+httpRoute:
+  # In case you are using an existing gateway (gateway.create=false), please also set:
+  #   - gateway.name
+  #   - gateway.listener.name
+  # according to your existing gateway resource.
+  enabled: false
+
+# DEPRECATED: Please use the new gateway API above
 ingress:
   enabled: false
   annotations: {}
